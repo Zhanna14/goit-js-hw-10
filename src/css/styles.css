@@ -23,3 +23,13 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+.pages {
+  display: flex;
+  gap: 20px;
+}
+
+.pages:focus,
+.pages:hover {
+    color: #6c8cff;
+}
