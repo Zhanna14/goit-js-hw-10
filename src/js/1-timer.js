@@ -28,7 +28,10 @@ const options = {
       console.log(userSelectedDate);
     } else {
       startButton.disabled = true;
-      iziToast.error('Please choose a date in the future');
+        iziToast.error({
+          message: 'Please choose a date in the future',
+          position: 'topRight',
+        });
     }
   }, //функція, яка буде викликана при закритті календаря
 };
