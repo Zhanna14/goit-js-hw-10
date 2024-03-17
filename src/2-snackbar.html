@@ -10,26 +10,29 @@
 </head>
 
 <body>
-
+<a href="./index.html">Go to home</a>
 <form class="form">
-    <label>
+    <label class="time">
         Delay (ms)
-        <input type="number" name="delay" required />
+        <input class="time-file" type="number" name="delay" required />
     </label>
 
-    <fieldset>
+    <fieldset class="activ">
         <legend>State</legend>
+        <div class="box">
         <label>
-            <input type="radio" name="state" value="fulfilled" required />
+            <input class="chose-activ" type="radio" name="state" value="fulfilled" required />
             Fulfilled
         </label>
         <label>
-            <input type="radio" name="state" value="rejected" required />
+            <input class="chose-activ" type="radio" name="state" value="rejected" required />
             Rejected
         </label>
+        </div>
+
     </fieldset>
 
-    <button type="submit">Create notification</button>
+    <button class="on" type="submit">Create notification</button>
 </form>
 <script src="./js/2-snackbar.js" type="module"></script>
 

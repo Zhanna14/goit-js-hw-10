@@ -24,6 +24,7 @@ const options = {
     const selectedDate = new Date(userSelectedDate);
     if (selectedDate > currentDate) {
       startButton.disabled = false;
+      
       console.log(userSelectedDate);
     } else {
       startButton.disabled = true;
