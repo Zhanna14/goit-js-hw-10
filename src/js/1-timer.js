@@ -4,15 +4,13 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 // Описаний у документації
-import iziToast from "izitoast";
+import iziToast from 'izitoast';
 // Додатковий імпорт стилів
-import "izitoast/dist/css/iziToast.min.css";
+import 'izitoast/dist/css/iziToast.min.css';
 
-
-const datetimePicker = document.querySelector('#datetime-picker');
 const startButton = document.querySelector('[data-start]');
 let userSelectedDate;
-const currentDate = Date.now();
+let intervalId = null;
 
 flatpickr('#datetime-picker', {});
 const options = {
@@ -22,16 +20,17 @@ const options = {
   minuteIncrement: 1, //встановлює крок у хвилинах для вибору часу
   onClose(selectedDates) {
     userSelectedDate = selectedDates[0];
-    const selectedDate = new Date(userSelectedDate).getTime();
+    const currentDate = Date.now();
+    const selectedDate = new Date(userSelectedDate);
     if (selectedDate > currentDate) {
       startButton.disabled = false;
       console.log(userSelectedDate);
     } else {
       startButton.disabled = true;
-        iziToast.error({
-          message: 'Please choose a date in the future',
-          position: 'topRight',
-        });
+      iziToast.error({
+        message: 'Please choose a date in the future',
+        position: 'topRight',
+      });
     }
   }, //функція, яка буде викликана при закритті календаря
 };
@@ -59,11 +58,26 @@ function convertMs(ms) {
 // Додаємо обробник події на кнопку "Start"
 
 startButton.addEventListener('click', () => {
-  const waiting = new Date(userSelectedDate).getTime() - currentDate;
-  console.log(waiting);
+  intervalId = setInterval(() => {
+    const currentTime = Date.now();
+    const diff = userSelectedDate - currentTime;
+
+    const time = convertMs(diff);
+    console.log(time);
+    // Оновлення значень відповідних елементів DOM
+    document.querySelector('[data-days]').textContent = String(
+      time.days
+    ).padStart(2, '0');
+    document.querySelector('[data-hours]').textContent = String(
+      time.hours
+    ).padStart(2, '0');
+    document.querySelector('[data-minutes]').textContent = String(
+      time.minutes
+    ).padStart(2, '0');
+    document.querySelector('[data-seconds]').textContent = String(
+      time.seconds
+    ).padStart(2, '0');
+    startButton.disabled = true;
+    if (diff < 1000) clearInterval(intervalId);
+  }, 1000);
 });
-
-
-// console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-// console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-// console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
