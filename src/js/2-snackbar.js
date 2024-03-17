@@ -2,39 +2,46 @@
 import iziToast from 'izitoast';
 // Додатковий імпорт стилів
 import 'izitoast/dist/css/iziToast.min.css';
-
-function createPromise(delay, state) {
-  const promise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (state === 'fulfilled') {
-        resolve(delay);
-      } else {
-        reject('Notification creation failed');
-      }
-    }, delay);
-  });
-
-  return promise;
-}
-
-
-// Функція, яка обробляє результат виконання промісу
-function handleNotification(delay) {
-  console.log(`Notification created after ${delay} ms`);
-}
-
 // Отримання форми
 const form = document.querySelector('.form');
 
 // Обробник події submit для форми
 form.addEventListener('submit', event => {
-  event.preventDefault(); // Зупиняємо стандартну поведінку форми
+  event.preventDefault();
 
-  const formData = new FormData(form);
-  const delay = formData.get('delay');
-  const state = formData.get('state');
+  const delayInput = event.currentTarget.elements.delay;
+  const stateInput = event.currentTarget.elements.state;
 
-  createPromise(delay, state) // Створення промісу
-    .then(handleNotification) // Обробка випадку успішного виконання
-    .catch(error => console.error(error)); // Обробка випадку невдалого виконання
+  const timer = parseInt(delayInput.value);
+  const progres = stateInput.value;
+
+  createPromise(timer, progres)
+    .then(() => handleNotification(timer))
+    .catch(() => onRejected(timer));
 });
+
+function createPromise(timer, progres) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (progres === 'fulfilled') {
+        resolve(timer);
+      } else {
+        reject(timer);
+      }
+    }, timer);
+  });
+}
+
+function handleNotification(timer) {
+  iziToast.success({
+    message: `✅ Fulfilled promise in ${timer}ms`,
+    position: 'topRight',
+  });
+}
+
+function onRejected(timer) {
+  iziToast.error({
+    message: `❌ Rejected promise in ${timer}ms`,
+    position: 'topRight',
+  });
+}
